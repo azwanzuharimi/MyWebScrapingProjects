@@ -13,12 +13,12 @@ def lambda_handler(event, context):
 url1 = 'https://www.tomtom.com/traffic-index/_next/data/cLpgTfJvmcwXzPAkCVQr3/malaysia-country-traffic.json?cityOrCountry=malaysia-country-traffic'
 url2 = 'https://api.midway.tomtom.com/ranking/liveHourly/MYS_kuala-lumpur'
 
-u1_main = json.loads(requests.get(url1).text)['pageProps']['cityOrCountry']['cities'][0]
-df1 = pd.json_normalize(u1_main)
+# u1_main = json.loads(requests.get(url1).text)['pageProps']['cityOrCountry']['cities'][0]
+# df1 = pd.json_normalize(u1_main)
 
-# %%
-u2_main = json.loads(requests.get(url2).text)['data']
+u2_main = json.loads(requests.get(url2, verify=False).text)['data']
 df2 = pd.json_normalize(u2_main)
+
 df2['UpdateTime'] = pd.to_datetime(df2['UpdateTime'], unit = 'ms')
 df2['UpdateTime'] = df2['UpdateTime'] + pd.Timedelta(hours=8)
 df2['UpdateTimeWeekAgo'] = pd.to_datetime(df2['UpdateTimeWeekAgo'], unit = 'ms')
